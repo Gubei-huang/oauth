@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwj.dao.WarehouseDao">
+    <sql id="getWarehouse">
+        id,name,address
+    </sql>
+    <select id="selectWarehouse" resultType="Warehouse">
+        select <include refid="getWarehouse"/>
+        from warehouse
+    </select>
+
+    <select id="selectWarehouseById" resultType="Warehouse">
+        select <include refid="getWarehouse"/>
+        from warehouse where id = #{id}
+    </select>
+
+    <delete id="deleteWarehouseById">
+        delete from warehouse where id = #{id}
+    </delete>
+
+    <insert id="insertWarehouse">
+        insert into warehouse(name,address)
+        values (#{name},#{address})
+    </insert>
+
+    <update id="updateWarehouse">
+        update warehouse
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name}
+            </if>
+            <if test="address!=null and address!=''">
+                ,address = #{address}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

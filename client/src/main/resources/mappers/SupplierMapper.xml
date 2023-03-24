@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwj.dao.SupplierDao">
+    <sql id="getSupplier">
+        id,name,address,phone
+    </sql>
+    <select id="selectSuppliers" resultType="Supplier">
+        select <include refid="getSupplier"/>
+        from supplier
+    </select>
+
+    <select id="selectSupplierById" resultType="Supplier">
+        select <include refid="getSupplier"/>
+        from supplier where id = #{id}
+    </select>
+
+    <delete id="deleteSupplierById">
+        delete from supplier where id = #{id}
+    </delete>
+
+    <insert id="insertSupplier">
+        insert into supplier(name,address,phone)
+        values (#{name},#{address},#{phone})
+    </insert>
+
+    <insert id="insertSupplierList">
+        insert into supplier(name,address,phone)
+        values
+        <foreach collection="supplierList" item="s" separator=",">
+            (#{s.name},#{s.address},#{s.phone})
+        </foreach>
+    </insert>
+
+    <update id="updateSupplier">
+        update suppllier
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name}
+            </if>
+            <if test="address!=null and address!=''">
+                ,address = #{address}
+            </if>
+            <if test="phone!=null and phone!=''">
+                ,phone = #{phone}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwj.dao.InventoryDao">
+    <resultMap id="inventoryMap" type="Inventory">
+        <id column="goods_id" property="goodsId"/>
+        <id column="warehouse_id" property="warehouseId"/>
+        <result column="quantity" property="quantity"/>
+        <association property="goods" column="goods_id"
+                     select="com.hwj.dao.GoodsDao.selectGoodsById"/>
+        <association property="warehouse" column="warehouse_id"
+                     select="com.hwj.dao.WarehouseDao.selectWarehouseById"/>
+    </resultMap>
+    <sql id="getInventory">
+        goods_id,warehouse_id,quantity
+    </sql>
+    <select id="selectInventory" resultMap="inventoryMap">
+        select <include refid="getInventory"/>
+        from inventory
+    </select>
+
+    <select id="selectInventoryByGidAndWid" resultMap="inventoryMap">
+        select <include refid="getInventory"/>
+        from inventory
+        where goods_id = #{goodsId} and warehouse_id = #{warehouseId}
+    </select>
+
+    <select id="selectInventoryByGid" resultMap="inventoryMap">
+        select <include refid="getInventory"/>
+        from inventory
+        where goods_id = #{goodsId}
+    </select>
+
+    <select id="selectInventoryByWid" resultMap="inventoryMap">
+        select <include refid="getInventory"/>
+        from inventory
+        where warehouse_id = #{warehouseId}
+    </select>
+
+    <select id="selectCountByGoodsId" resultType="int">
+        select sum(quantity) from inventory where goods_id = #{goodsId}
+    </select>
+
+    <select id="selectCountByWarehouseId" resultType="int">
+        select sum(quantity) from inventory where warehouse_id = #{warehouseId}
+    </select>
+
+    <insert id="insertGoodsInventory">
+        insert into inventory(goods_id,warehouse_id,quantity)
+        values (#{goodsId},#{warehouseId},#{quantity})
+    </insert>
+
+    <update id="updateGoodsQuantity">
+        update inventory set quantity = #{quantity}
+        where goods_id = #{goodsId} and warehouse_id = #{warehouseId}
+    </update>
+</mapper>

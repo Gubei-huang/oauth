@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  thymeleaf:
+    cache: false
+  application:
+    name: oauth2-server
+  datasource:
+    url: jdbc:mysql://192.168.1.180:3306/savesystem?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
+#    url: jdbc:mysql://localhost:3306/autho?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
+    username: savesystem
+    password: savesystem2023@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    static-path-pattern: /**
+    pathmatch:
+      matching-strategy: ant_path_matcher
+mybatis:
+  type-aliases-package: com.hwj.pojo
+  mapper-locations: classpath:mappers/*.xml
+
+
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwj.dao.GoodsDao">
+    <sql id="getGoods">
+        id,name,specification,category,description
+    </sql>
+    <select id="selectGoods" resultType="Goods">
+        select <include refid="getGoods"/>
+        from goods
+    </select>
+
+    <insert id="insertGoods">
+        insert into goods(name,specification,category,description)
+        values (#{name},#{specification},#{category},#{description})
+    </insert>
+
+    <insert id="insertGoodsList">
+        insert into goods(name,specification,category,description)
+        values
+        <foreach collection="goodsList" separator="," item="goods">
+            (#{goods.name},#{goods.specification},#{goods.category},#{goods.description})
+        </foreach>
+    </insert>
+
+    <select id="selectGoodsById" resultType="Goods">
+        select <include refid="getGoods"/>
+        from goods where id = #{id}
+    </select>
+
+    <delete id="deleteGoodsById">
+        delete from goods where id = #{id}
+    </delete>
+
+    <update id="updateGoodsById">
+        update goods
+        <set>
+            <if test="name!=null and name!=''">
+                name = #{name}
+            </if>
+            <if test="specification!=null and specification!=''">
+                ,specification = #{specification}
+            </if>
+            <if test="category!=null and category!=''">
+                ,category = #{category}
+            </if>
+            <if test="description!=null and description!=''">
+                ,description = #{description}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectGoodsByLimit" resultType="Goods">
+        select <include refid="getGoods"/>
+        from goods limit #{pageBegin},#{pageSize}
+    </select>
+
+    <select id="findGoods" resultType="Goods">
+        select <include refid="getGoods"/>
+        from goods
+        <where>
+            <if test="name!=null and name!=''">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="specification!=null and specification!=''">
+                and specification like concat('%',#{specification},'%')
+            </if>
+            <if test="category!=null and category!=''">
+                and category like concat('%',#{category},'%')
+            </if>
+            <if test="description!=null and description!=''">
+                and description like concat('%',#{description},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

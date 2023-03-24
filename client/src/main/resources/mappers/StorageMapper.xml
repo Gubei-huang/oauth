@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwj.dao.StorageDao">
+    <resultMap id="storageMap" type="Storage">
+        <id property="id" column="id"/>
+        <result property="supplierId" column="supplier_id"/>
+        <result property="warehouseId" column="warehouse_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="time" column="time"/>
+        <association property="supplier" column="supplier_id"
+                     select="com.hwj.dao.SupplierDao.selectSupplierById"/>
+        <association property="warehouse" column="warehouse_id"
+                     select="com.hwj.dao.WarehouseDao.selectWarehouseById"/>
+        <association property="goods" column="goods_id"
+                     select="com.hwj.dao.GoodsDao.selectGoodsById"/>
+    </resultMap>
+    <sql id="getStorage">
+        id,supplier_id,warehouse_id,goods_id,quantity,time
+    </sql>
+
+    <select id="selectStorage" resultMap="storageMap">
+        select <include refid="getStorage"/>
+        from storage
+    </select>
+
+    <select id="selectStorageById" resultMap="storageMap">
+        select <include refid="getStorage"/>
+        from storage where id = #{id}
+    </select>
+
+    <insert id="insertStorage">
+        insert into storage(supplier_id,warehouse_id,goods_id,quantity,time)
+        values (#{supplierId},#{warehouseId},#{goodsId},#{quantity},#{time})
+    </insert>
+
+    <select id="findStorage" resultMap="storageMap">
+        select <include refid="getStorage"/>
+        from storage
+        <where>
+            <if test="supplierId != null and supplierId !=0">
+                supplier_id = #{supplierId}
+            </if>
+            <if test="warehouseId != null and warehouseId !=0">
+                and warehouse_id = #{warehouseId}
+            </if>
+            <if test="goodsId != null and goodsId !=0">
+                and goods_id = #{goodsId}
+            </if>
+        </where>
+    </select>
+
+</mapper>
